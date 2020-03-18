@@ -84,6 +84,12 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
          tree <- 'ourself'.
         } | ) 
 
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'users' -> 'owner' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: InitializeToExpression: (\'\')'
+        
+         hashedVNCPassword <- ''.
+        } | ) 
+
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'userProfile' -> () From: ( | {
          'ModuleInfo: Module: ourself InitialContents: InitializeToExpression: (\'\')'
         
