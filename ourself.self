@@ -1,10 +1,9 @@
- ''
+ '30.21.0'
  '
 Copyright 1992-2016 AUTHORS.
 See the legal/LICENSE file for license information and legal/AUTHORS for authors.
 '
-[ 
-"prefileIn" self] value
+["preFileIn" self] value
 
 
  '-- Module body'
@@ -108,9 +107,16 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
  bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'worldMorph' -> () From: ( | {
          'Category: menu operations\x7fCategory: support for opening and closing windows\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
         
+         guessServerName = ( |
+            | (os outputOfCommand: 'hostname' IfFail: '{domain name}') shrinkwrapped).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'worldMorph' -> () From: ( | {
+         'Category: menu operations\x7fCategory: support for opening and closing windows\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
          reportThatUser: u CanAccessDisplay: d = ( |
             | 
-            userQuery report: u name, ' may now connect on https://desktop.ourself.io/', u hostName, '/', (d slice: 1 @ infinity), '/'. self).
+            userQuery report: u name, ' may now connect on https:/', guessServerName, '/', u hostName, '/', (d slice: 1 @ infinity), '/'. self).
         } | ) 
 
 
