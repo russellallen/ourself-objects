@@ -104,11 +104,24 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
             | hashedVNCPassword: os outputOfCommand: 'echo ', p, ' | vncpasswd -f' Delay: 100 IfFail: [|:e| error: e]. self).
         } | ) 
 
+ bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'handMorph' -> () From: ( | {
+         'Category: name and other userInfo issues\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         informSystemAboutPassword = ( |
+            | 
+            "Remove initiall ':' character"
+            ('/usr/local/ourselfvnc/',
+               winCanvasForHand display originalName copyWithoutFirst,
+            '.vncpasswd') setFileContentsTo: userInfo hashedVNCPassword.
+            self).
+        } | ) 
+
  bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'worldMorph' -> () From: ( | {
          'Category: menu operations\x7fCategory: support for opening and closing windows\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
         
          guessServerName = ( |
-            | (os outputOfCommand: 'hostname' IfFail: '{domain name}') shrinkwrapped).
+            | 
+            (os outputOfCommand: 'hostname' IfFail: '{server name}') shrinkwrapped).
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'worldMorph' -> () From: ( | {
@@ -116,7 +129,7 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
         
          reportThatUser: u CanAccessDisplay: d = ( |
             | 
-            userQuery report: u name, ' may now connect on https:/', guessServerName, '/', u hostName, '/', (d slice: 1 @ infinity), '/'. self).
+            userQuery report: u name, ' may now connect on https://', guessServerName, '/', u hostName, '/', (d slice: 1 @ infinity), '/'. self).
         } | ) 
 
 
