@@ -104,6 +104,14 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
             | hashedVNCPassword: os outputOfCommand: 'echo ', p, ' | vncpasswd -f' Delay: 100 IfFail: [|:e| error: e]. self).
         } | ) 
 
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'users' -> 'owner' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         hashedVNCPassword = ( |
+            | 
+            '/usr/local/ourselfvnc/0.vncpasswd' asFileContents).
+        } | ) 
+
  bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'handMorph' -> () From: ( | {
          'Category: name and other userInfo issues\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
         
