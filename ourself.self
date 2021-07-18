@@ -127,9 +127,7 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
  bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'worldMorph' -> () From: ( | {
          'Category: menu operations\x7fCategory: support for opening and closing windows\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
         
-         guessServerName = ( |
-            | 
-            (os outputOfCommand: 'hostname' IfFail: '{server name}') shrinkwrapped).
+         guessServerName = '{server}.ourself.io'.
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'worldMorph' -> () From: ( | {
