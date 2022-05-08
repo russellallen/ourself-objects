@@ -8,6 +8,360 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
 
  '-- Module body'
 
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
+         'Category: checkpoints\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         checkpoint = ( |
+            | 
+            checkpointWithComment: '').
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
+         'Category: checkpoints\x7fCategory: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         checkpointAskForComment = ( |
+            | checkpointWithComment: userQuery askString: 'Comment for checkpoint' DefaultAnswer: '' IfCancel: [^ self]. self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
+         'Category: checkpoints\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         checkpointWithComment: comment = ( |
+             cd.
+            | 
+            cd: checkpoints checkpointDescription copyComment: comment.
+            snapshotOptions fileName: '/self/', cd toFileName.
+            writeSnapshotNoBackupIfSnapshotFails: [|:e| ^error: 'Snapshot failed: ', e].
+            makeCurrent: cd.
+            self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
+         'Category: checkpoints\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         checkpoints = bootstrap setObjectAnnotationOf: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( |
+             {} = 'ModuleInfo: Creator: globals memory checkpoints.
+'.
+            | ) .
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         all = ( |
+            | 
+            (allFiles 
+              mapBy: [|:fn| checkpointDescription copyFromFileName: fn IfInvalid: nil])
+              filterBy: [|:cd| cd isNil not]).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         allFiles = ( |
+            | (os outputOfCommand: 'ls /self' Timeout: 200 IfFail: [^ error: 'Cannot find /self']) splitOn: '\n').
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
+         'Category: prototypes\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         checkpointDescription = bootstrap setObjectAnnotationOf: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( |
+             {} = 'ModuleInfo: Creator: globals memory checkpoints checkpointDescription.
+'.
+            | ) .
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         < cd = ( |
+            | saveTime < cd saveTime).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         = cd = ( |
+            | saveTime = cd saveTime).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: state\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         comment.
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         commentForFileName = ( |
+            | '' = comment ifTrue: '' False: [ ' - ', escapedComment]).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         copy = ( |
+            | 
+            copyComment: '').
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         copyComment: comment = ( |
+            | (resend.copy saveTime: time current) comment: comment).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         copyFromFileName: fn IfInvalid: blk = ( |
+             c.
+             s.
+            | 
+            s: fn splitOn: ' - '.
+            (s size < 2) || (s size > 3) ifTrue: [^ blk value].
+            'snapshot' != s first        ifTrue: [^ blk value].
+
+            c: copy.
+                                 c saveTime: readTime: (s at: 1) IfInvalid: [^ blk value].
+            (s size = 3) ifTrue: [c comment: unescape: (s at: 2) IfInvalid: [^ blk value]].
+            c).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: actions\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         deleteCheckpoint = ( |
+            | os unlink: '/self/', toFileName IfFail: [^ error: 'Could not delete checkpoint']. self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         escapedComment = ( |
+            | 
+            (comment asVector mapBy: [|:c| c isLetter || (c = ' ') ifTrue: c False: '%', (c asByte printStringBase: 16 PadWith: '0' ToSize: 2)]) joinUsing: '').
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         hash = ( |
+            | saveTime hash).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         ordered* = bootstrap stub -> 'mixins' -> 'ordered' -> ().
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         parent* = bootstrap stub -> 'traits' -> 'clonable' -> ().
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         readTime: s IfInvalid: blk = ( |
+             d.
+             m.
+             ms.
+             t.
+             y.
+            | 
+            s size = (4 + 2 + 2 + 8) ifFalse: [^ blk value].
+            s do: [| :c | c isDigit ifFalse: [^ blk value]].
+            y: s slice: 0 @ 4.
+            m: s slice: 4 @ 6.
+            d: s slice: 6 @ 8.
+            ms: s slice: 8 @ 16.
+            t: time copyYear: y asInteger
+                     Month: m asInteger
+                      Date: d asInteger
+                     Hours: 0
+                   Minutes: 0
+                   Seconds: 0. 
+            t: t addMsec: ms asInteger.
+            t).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: actions\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         revertToCheckpoint = ( |
+            | memory revert: self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: state\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         saveTime.
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         timeForFileName = ( |
+            | 
+             saveTime yearGMT asString, 
+            (saveTime monthGMT printStringPadWith0ToSize: 2), 
+            (saveTime dateGMT printStringPadWith0ToSize: 2), 
+            (saveTime msec printStringPadWith0ToSize: 8)).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         toFileName = ( |
+            | 
+            'snapshot - ', timeForFileName, commentForFileName).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         unescape: s IfInvalid: blk = ( |
+             i <- 0.
+             u <- ''.
+            | 
+            [ i < s size ] whileTrue: [| l |
+              l: s at: i.
+              l isLetter || (l = ' ')
+                 ifTrue: [ u: u, l. i: i succ ]
+                  False: [| n. v | '%' = l ifFalse: [ ^ blk value: ''].
+                           (i + 3) > s size ifTrue: [^ blk value: ''].
+                           n: s slice: (i + 1) @ (i + 3).
+                           v: n hexAsIntegerIfFail: [^ blk value: ''].
+                           u: u, ('' characterFor: v IfFail: [^ blk value: '']).
+                           i: i + 3]].
+            u).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot\x7fVisibility: public'
+        
+         contributeToBackgroundMenu: m = ( |
+            | 
+            m addButton:
+                ( ( ui2Button copy
+                   scriptBlock: [memory checkpoint] )
+                   label: 'Checkpoint')
+            ToGroup: 'bottom'.
+
+            m addButton: 
+              ( ( ( ui2Button copy
+                       scriptBlock: [memory checkpoint checkpointAskForComment])
+                       label:  'Checkpoint with comment ...' )
+              isAsynchronous: true )
+            ToGroup: 'bottom'.
+
+            m addButton: 
+              ( ( ( ui2Button copy
+                       scriptBlock: [event sourceHand attach: event sourceHand world outlinerForMirror: reflect: memory checkpoints] )
+                       label:  'Manage checkpoints ...' )
+              isAsynchronous: true )
+            ToGroup: 'bottom'.
+
+            m addButton: 
+              ( ( ( ui2Button copy
+                       scriptBlock: [memory sleepSelf] )
+                       label:  'Sleep ...' )
+              isAsynchronous: true )
+            ToGroup: 'bottom'.
+
+            self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         earliest = ( |
+            | all min).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         mostRecent = ( |
+            | all max).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         parent* = bootstrap stub -> 'traits' -> 'oddball' -> ().
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
+         'Category: checkpoints\x7fCategory: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         makeCurrent: cd = ( |
+            | os command: 'ln -f \'/self/', cd toFileName, '\' /self/snapshot'. self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
+         'Category: checkpoints\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         restartSelf = ( |
+            | 
+            "Without daemon, restartSelf will be commiting patricide"
+            os command: 'daemon -f /usr/local/bin/restartSelf').
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
+         'Category: checkpoints\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         revert: cd = ( |
+            | makeCurrent: cd. restartSelf).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
+         'Category: checkpoints\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         sleepSelf = ( |
+            | 
+            userQuery reportAndContinue: 'Please use the OurSelf management console to sleep.'. self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
+         'Category: checkpoints\x7fCategory: support\x7fComment: Like default, but don\'t save .backup file\x7fModuleInfo: Module: ourself InitialContents: FollowSlot\x7fVisibility: public'
+        
+         writeSnapshotNoBackupIfSnapshotFails: snapFailBlock = ( |
+             ms.
+             saveCode.
+             snapSpaceSizes.
+             undoBlock.
+            | 
+            "Save code only if asked to and the first old space segment is the only
+             non-empty one."
+            ms: memoryState copy.
+            saveCode:     snapshotOptions saveObjectCode
+                       && [ms numNonEmptyOldSpaceSegments = 1]
+                       && [((ms old first at: 0) + (ms old first at: 1)) > 0].
+
+            "Calculate startup space sizes for the snapshot."
+            snapSpaceSizes: snapshotOptions spaceSizes copy.
+            snapSpaceSizes old_size: ms used + (minLowSpaceThresholdInVM * 2).
+
+            scavenge. "bug work-around, eden size too small"
+
+            _MemoryWriteSnapshot: snapshotOptions fileName
+                        Compress: snapshotOptions compressionFilters
+                           Sizes: snapSpaceSizes
+                        SaveCode: saveCode
+                          IfFail: [|:e|
+              undoBlock value.
+              ^snapFailBlock value: e
+            ].
+            programmingLog writeSnapshot: snapshotOptions fileName.
+            self).
+        } | ) 
+
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'modules' -> () From: ( | {
          'ModuleInfo: Module: ourself InitialContents: FollowSlot'
         
@@ -62,6 +416,7 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
                                    users owner hashedVNCPassword: '/self/vnc/0.vncpasswd' asFileContents.
                                    i succ).
                                |).
+            worldMorph addBackgroundMenuContributor: memory checkpoints.
             self).
         } | ) 
 
@@ -112,6 +467,30 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
             '/usr/local/ourselfvnc/0.vncpasswd' asFileContents).
         } | ) 
 
+ bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> () From: ( | {
+         'Category: background menu\x7fModuleInfo: Module: ourself InitialContents: FollowSlot\x7fVisibility: public'
+        
+         contributeToBackgroundMenu: m = ( |
+            | 
+            m addButton:
+                ( ( ui2Button copy
+                   scriptBlock: [event sourceHand attach:
+                                   selfObjectModel newOutlinerFor: (reflect: shell copy)
+                                                          InWorld: event sourceHand world] )
+                   label: 'New shell' )
+            ToGroup: 'top'.
+
+            m addButton:
+                ( ( ui2Button copy
+                   scriptBlock: [event sourceHand attach:
+                                   selfObjectModel newOutlinerFor: (reflect: ())
+                                                          InWorld: event sourceHand world] )
+                   label: 'New Object' )
+            ToGroup: 'top'.
+
+            self).
+        } | ) 
+
  bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'handMorph' -> () From: ( | {
          'Category: name and other userInfo issues\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
         
@@ -121,6 +500,28 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
             ('/usr/local/ourselfvnc/',
                winCanvasForHand display originalName copyWithoutFirst,
             '.vncpasswd') setFileContentsTo: userInfo hashedVNCPassword.
+            self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'worldMorph' -> () From: ( | {
+         'Category: background-menu building\x7fModuleInfo: Module: ourself InitialContents: FollowSlot\x7fVisibility: public'
+        
+         contributeToBackgroundMenu: m = ( |
+            | 
+            m addButton: ( (ui2Button copy scriptBlock: [event sourceHand attach: event sourceHand world outlinerForMirror: reflect: globals]) 
+                                                 label: 'Globals' )
+                ToGroup: 'usefulObjects'.
+            m addButton: ( (ui2Button copy scriptBlock: [target toggleSpy]) 
+                                                 label: 'Toggle Spy' )
+                ToGroup: 'builtInMorphs'.
+            m addButton: ( ( ui2Button copy scriptBlock: [target collapseAllOutliners: event] ) 
+                                                  label: 'Collapse All' )
+                ToGroup: 'worldManagement'.
+
+            m addButton: ( ( ui2Button copy scriptBlock: [target cleanUp: event] ) 
+                                                  label: 'Clean Up' )
+                ToGroup: 'worldManagement'.
+
             self).
         } | ) 
 
