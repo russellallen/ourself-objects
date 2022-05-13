@@ -17,7 +17,7 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
-         'Category: checkpoints\x7fCategory: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+         'Category: checkpoints\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
         
          checkpointAskForComment = ( |
             | checkpointWithComment: userQuery askString: 'Comment for checkpoint' DefaultAnswer: '' IfCancel: [^ self]. self).
@@ -60,6 +60,116 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
         
          allFiles = ( |
             | (os outputOfCommand: 'ls /self' Timeout: 200 IfFail: [^ error: 'Cannot find /self']) splitOn: '\n').
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         automatic = bootstrap setObjectAnnotationOf: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( |
+             {} = 'ModuleInfo: Creator: globals memory checkpoints automatic.
+'.
+            | ) .
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         abortHandlingProcess = ( |
+            | running abortIfLive. running: deadProcess. self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'Category: settings\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         automaticComment = 'automatic checkpoint'.
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         deadProcess = bootstrap setObjectAnnotationOf: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> 'deadProcess' -> () From: ( |
+             {} = 'ModuleInfo: Creator: globals memory checkpoints automatic deadProcess.
+'.
+            | ) .
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> 'deadProcess' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         abortIfLive = ( |
+            | self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> 'deadProcess' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         isAlive = bootstrap stub -> 'globals' -> 'false' -> ().
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         ensureRunning = ( |
+            | 
+            running isAlive ifFalse: [startRunning]. self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         handleLoop = ( |
+            | 
+            [process this sleep: waitTime. updateAutomaticCheckpoint] loop).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         hup = ( |
+            | abortHandlingProcess ensureRunning).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         parent* = bootstrap stub -> 'traits' -> 'oddball' -> ().
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'Category: state\x7fModuleInfo: Module: ourself InitialContents: InitializeToExpression: (memory checkpoints automatic deadProcess)'
+        
+         running <- bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> 'deadProcess' -> ().
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         startRunning = ( |
+            | 
+            running: (
+              process copySend: (message copy receiver: self Selector: 'handleLoop')
+                  CauseOfBirth: 'memory checkpoints automatic') resume. 
+            self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         updateAutomaticCheckpoint = ( |
+            | 
+            memory checkpoints all sort 
+               findFirst: [|:s| s comment = automaticComment]
+               IfPresent: [|:cd |
+                    memory checkpointWithComment: automaticComment.
+                    cd deleteCheckpoint]
+                IfAbsent: [memory checkpointWithComment: automaticComment].
+            self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
+         'Category: settings\x7fModuleInfo: Module: ourself InitialContents: InitializeToExpression: (1000)'
+        
+         waitTime <- 1000.
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
@@ -247,16 +357,10 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
         
          contributeToBackgroundMenu: m = ( |
             | 
-            m addButton:
-                ( ( ui2Button copy
-                   scriptBlock: [memory checkpoint] )
-                   label: 'Checkpoint')
-            ToGroup: 'bottom'.
-
             m addButton: 
               ( ( ( ui2Button copy
-                       scriptBlock: [memory checkpoint checkpointAskForComment])
-                       label:  'Checkpoint with comment ...' )
+                       scriptBlock: [memory checkpointAskForComment])
+                       label:  'Checkpoint ...' )
               isAsynchronous: true )
             ToGroup: 'bottom'.
 
@@ -301,7 +405,8 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
          'Category: checkpoints\x7fCategory: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
         
          makeCurrent: cd = ( |
-            | os command: 'ln -f \'/self/', cd toFileName, '\' /self/snapshot'. self).
+            | 
+            os command: 'ln -s -f \'/self/', cd toFileName, '\' /self/snapshot'. self).
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> () From: ( | {
@@ -417,6 +522,8 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
                                    i succ).
                                |).
             worldMorph addBackgroundMenuContributor: memory checkpoints.
+            snapshotAction addSchedulerInitialMessage: (
+              message copy receiver: memory checkpoints automatic Selector: 'hup').
             self).
         } | ) 
 
@@ -468,6 +575,13 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> () From: ( | {
+         'Category: checkpointing\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         checkpoint = ( |
+            | memory checkpointAskForComment. self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> () From: ( | {
          'Category: background menu\x7fModuleInfo: Module: ourself InitialContents: FollowSlot\x7fVisibility: public'
         
          contributeToBackgroundMenu: m = ( |
@@ -489,6 +603,13 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
             ToGroup: 'top'.
 
             self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> () From: ( | {
+         'Category: checkpointing\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         sleep = ( |
+            | memory sleepSelf. self).
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'traits' -> 'handMorph' -> () From: ( | {
