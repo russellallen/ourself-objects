@@ -50,9 +50,10 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
         
          all = ( |
             | 
-            (allFiles 
+            ((allFiles 
               mapBy: [|:fn| checkpointDescription copyFromFileName: fn IfInvalid: nil])
-              filterBy: [|:cd| cd isNil not]).
+              filterBy: [|:cd| cd isNil not])
+              sort).
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
@@ -196,9 +197,9 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
-         'Category: state\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+         'Category: state\x7fModuleInfo: Module: ourself InitialContents: InitializeToExpression: (\'\')'
         
-         comment.
+         comment <- ''.
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
@@ -258,6 +259,13 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
          'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
         
+         hasTimeStamp: s = ( |
+            | timeForFileName = s).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
+         'Category: support\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
          hash = ( |
             | saveTime hash).
         } | ) 
@@ -308,9 +316,9 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
-         'Category: state\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
+         'Category: state\x7fModuleInfo: Module: ourself InitialContents: InitializeToExpression: (time origin)'
         
-         saveTime.
+         saveTime <- time origin.
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'checkpointDescription' -> () From: ( | {
@@ -577,8 +585,52 @@ SlotsToOmit: directory fileInTimeString myComment postFileIn revision subpartNam
  bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> () From: ( | {
          'Category: checkpointing\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
         
-         checkpoint = ( |
-            | memory checkpointAskForComment. self).
+         checkpoints = bootstrap setObjectAnnotationOf: bootstrap stub -> 'shell' -> 'shortcuts' -> 'checkpoints' -> () From: ( |
+             {} = 'ModuleInfo: Creator: shell shortcuts checkpoints.
+'.
+            | ) .
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> 'checkpoints' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         all = ( |
+            | 
+            memory checkpoints all do: [|:cd| 
+              (cd timeForFileName, '    ', cd comment) printLine]. 
+            self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> 'checkpoints' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         delete: timeStamp = ( |
+            | 
+            memory checkpoints all do: [|:cd| 
+              (cd hasTimeStamp: timeStamp) ifTrue: [cd deleteCheckpoint]].
+            self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> 'checkpoints' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         new: s = ( |
+            | memory checkpointWithComment: s. self).
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> 'checkpoints' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         parent* = bootstrap stub -> 'traits' -> 'oddball' -> ().
+        } | ) 
+
+ bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> 'checkpoints' -> () From: ( | {
+         'ModuleInfo: Module: ourself InitialContents: FollowSlot'
+        
+         revert: timeStamp = ( |
+            | memory checkpoints all do: [|:cd| 
+              (cd hasTimeStamp: timeStamp) ifTrue: [cd revertToCheckpoint]].
+            self).
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'shell' -> 'shortcuts' -> () From: ( | {
