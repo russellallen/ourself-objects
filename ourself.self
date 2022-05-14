@@ -82,7 +82,7 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
          'Category: settings\x7fModuleInfo: Module: ourself InitialContents: FollowSlot'
         
-         automaticComment = 'automatic checkpoint'.
+         automaticComment = '(current automatic checkpoint)'.
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
@@ -168,9 +168,9 @@ See the legal/LICENSE file for license information and legal/AUTHORS for authors
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> 'automatic' -> () From: ( | {
-         'Category: settings\x7fModuleInfo: Module: ourself InitialContents: InitializeToExpression: (1000)'
+         'Category: settings\x7fModuleInfo: Module: ourself InitialContents: InitializeToExpression: (60000)'
         
-         waitTime <- 1000.
+         waitTime <- 60000.
         } | ) 
 
  bootstrap addSlotsTo: bootstrap stub -> 'globals' -> 'memory' -> 'checkpoints' -> () From: ( | {
